@@ -1,6 +1,8 @@
 import os
+import pickle
 
 import cv2
+import numpy as np
 from PIL import Image
 
 
@@ -31,8 +33,8 @@ class FaceTrainer:
         """
         카메라를 이용해 얼굴을 학습하는 메소드입니다.
         """
-
         self.__capture_face()
+        self.__train()
 
     def __capture_face(self):
         """
@@ -79,3 +81,38 @@ class FaceTrainer:
 
         cap.release()
         cv2.destroyAllWindows()
+
+    def __train(self) -> None:
+        """
+        저장된 얼굴 이미지들을 이용해 얼굴을 학습합니다.
+        학습된 모델은 model 폴더에 저장됩니다.
+        """
+        detector = cv2.CascadeClassifier(
+            "./cascade/haarcascade_frontalface_default.xml"
+        )
+
+        self.__capture_face()
+
+        images = [
+            os.path.join("image", x)
+            for x in os.listdir("image")
+            if x.startswith(self.name)
+        ]
+
+        face_samples = []
+        _ids = []
+
+        for image in images:
+            gray_img = Image.open(image).convert("L")  # grayscale
+            img_numpy = np.array(gray_img, "uint8")
+
+            _id = int(os.path.split(image)[-1].split("_")[1])
+
+            for (x, y, w, h) in detector.detectMultiScale(img_numpy):
+                face_samples.append(img_numpy[y : y + h, x : x + w])
+                _ids.append(_id)
+
+        recognizer = cv2.face.LBPHFaceRecognizer_create()
+        recognizer.train(face_samples, np.array(_ids))
+
+        recognizer.write(f"model/{self.name}.yml")
