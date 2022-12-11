@@ -142,3 +142,6 @@ cython_debug/
 
 # Visual Studio Code
 .vscode
+
+# Trained face model
+face_model.yml
