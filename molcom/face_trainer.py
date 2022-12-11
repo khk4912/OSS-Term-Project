@@ -75,6 +75,8 @@ class FaceTrainer:
             "./cascade/haarcascade_frontalface_default.xml"
         )
 
+        cnt = 0
+
         while True:
             ret, frame = cap.read()
 
@@ -90,8 +92,6 @@ class FaceTrainer:
                 minSize=(30, 30),
             )
 
-            cnt = 0
-
             for (x, y, w, h) in faces:
                 cnt += 1
 
@@ -102,6 +102,8 @@ class FaceTrainer:
                     f"image/{self.name}_{self._id}_{cnt}.jpg",
                     frame[y : y + h, x : x + w],
                 )
+
+            cv2.imshow("Detecting Face", frame)
 
             if cv2.waitKey(1) & 0xFF == ord("q") or cnt == 100:
                 break
