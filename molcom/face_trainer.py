@@ -35,7 +35,7 @@ class FaceTrainer:
             동일한 이름이 이미 모델에 등록되어 있을 경우 발생합니다.
         """
 
-        with open("face_id.pickle", "rb") as f:
+        with open("face_ids.pickle", "rb") as f:
             faces: dict[int, str] = pickle.load(f)
 
         if self.name in faces.values():
@@ -144,7 +144,7 @@ class FaceTrainer:
 
         recognizer.write(f"model/face_model.yml")
 
-        with open("face_id.pickle", "wb") as f:
+        with open("face_ids.pickle", "wb") as f:
             faces: dict[int, str] = pickle.load(f)
 
             faces[self._id] = self.name
