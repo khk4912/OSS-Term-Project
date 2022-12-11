@@ -142,7 +142,7 @@ class FaceTrainer:
         recognizer = cv2.face.LBPHFaceRecognizer_create()
         recognizer.train(face_samples, np.array(_ids))
 
-        recognizer.write(f"model/{self.name}.yml")
+        recognizer.write(f"model/face_model.yml")
 
         with open("face_id.pickle", "wb") as f:
             faces: dict[int, str] = pickle.load(f)
