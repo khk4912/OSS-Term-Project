@@ -72,7 +72,7 @@ class FaceTrainer:
         """
         cap = cv2.VideoCapture(0)
         face_cascade = cv2.CascadeClassifier(
-            "./cascade/haarcascade_frontalface_default.xml"
+            "cascade/haarcascade_frontalface_default.xml"
         )
 
         cnt = 0
@@ -94,7 +94,7 @@ class FaceTrainer:
 
             for (x, y, w, h) in faces:
                 cnt += 1
-
+                print(f"얼굴 {cnt} 저장")
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                 # 얼굴 이미지를 저장
@@ -120,8 +120,6 @@ class FaceTrainer:
             "./cascade/haarcascade_frontalface_default.xml"
         )
 
-        self.__capture_face()
-
         images = [
             os.path.join("image", x)
             for x in os.listdir("image")
@@ -146,8 +144,10 @@ class FaceTrainer:
 
         recognizer.write(f"model/face_model.yml")
 
-        with open("face_ids.pickle", "wb+") as f:
+        with open("face_ids.pickle", "rb+") as f:
             faces: dict[int, str] = pickle.load(f)
 
-            faces[self._id] = self.name
+        faces[self._id] = self.name
+
+        with open("face_ids.pickle", "wb") as f:
             pickle.dump(faces, f)
