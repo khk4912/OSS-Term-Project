@@ -18,6 +18,30 @@ class FaceTrainer:
         """
 
         self.name = name
+        self._id = self.__get_face_id()
+
+    def __get_face_id(self) -> int:
+        """
+        얼굴의 ID를 반환합니다.
+
+        Returns
+        -------
+        int
+            얼굴의 ID. 이 ID는 학습된 모델에 저장됩니다.
+
+        Raises
+        ------
+        Exception
+            동일한 이름이 이미 모델에 등록되어 있을 경우 발생합니다.
+        """
+
+        with open("face_id.pickle", "rb") as f:
+            faces: dict[int, str] = pickle.load(f)
+
+        if self.name in faces.values():
+            raise Exception("이미 등록된 이름입니다!")
+
+        return len(faces) + 1
 
     def train_with_images(self, images: list[str]):
         """
@@ -74,7 +98,10 @@ class FaceTrainer:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
                 # 얼굴 이미지를 저장
-                cv2.imwrite(f"image/{self.name}_{cnt}.jpg", frame[y : y + h, x : x + w])
+                cv2.imwrite(
+                    f"image/{self.name}_{self._id}_{cnt}.jpg",
+                    frame[y : y + h, x : x + w],
+                )
 
             if cv2.waitKey(1) & 0xFF == ord("q") or cnt == 100:
                 break
@@ -116,3 +143,9 @@ class FaceTrainer:
         recognizer.train(face_samples, np.array(_ids))
 
         recognizer.write(f"model/{self.name}.yml")
+
+        with open("face_id.pickle", "wb") as f:
+            faces: dict[int, str] = pickle.load(f)
+
+            faces[self._id] = self.name
+            pickle.dump(faces, f)
