@@ -146,7 +146,7 @@ class FaceTrainer:
 
         recognizer.write(f"model/face_model.yml")
 
-        with open("face_ids.pickle", "wb") as f:
+        with open("face_ids.pickle", "wb+") as f:
             faces: dict[int, str] = pickle.load(f)
 
             faces[self._id] = self.name
