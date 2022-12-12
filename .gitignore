@@ -145,3 +145,5 @@ cython_debug/
 
 # Trained face model
 face_model.yml
+image/
+
