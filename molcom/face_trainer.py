@@ -103,6 +103,15 @@ class FaceTrainer:
                     frame[y : y + h, x : x + w],
                 )
 
+            cv2.putText(
+                frame,
+                f"{cnt} / 100",
+                (10, 30),
+                0,
+                1,
+                (0, 0, 255),
+                2,
+            )
             cv2.imshow("Detecting Face", frame)
 
             if cv2.waitKey(1) & 0xFF == ord("q") or cnt == 100:
