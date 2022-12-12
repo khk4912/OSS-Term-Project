@@ -44,6 +44,7 @@ class MolcomMainWindow(Tk):
             text="시작",
             command=self.__start_button_clicked,
         )
+        self.start_button = start_button
 
         now_face_label = Label(
             self,
@@ -88,6 +89,8 @@ class MolcomMainWindow(Tk):
     def __start_button_clicked(self):
         evt = threading.Event()
         switcher = WindowSwitcher(evt)
+
+        self.start_button.config(state="disabled")
 
         det_face_thread = threading.Thread(target=detect_face, args=(evt,), daemon=True)
         switcher_thread = threading.Thread(target=switcher.run, daemon=True)
