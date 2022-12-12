@@ -1,6 +1,12 @@
 # OSS-Term-Project
 ---
+
+## Project Summary
+This project implements changing page if a face different from the registered face is recongnized.
+
+---
 ## A method of execution 
+
 #### If first time
  1. Turn Git Bash
  2. Write code like this
@@ -10,6 +16,7 @@
 - $ pip install -r requirments.txt
 - $ cd molcom
 - $ python main.py
+
 #### If not first time
  1. Turn Git Bash
  2. Write code like this
@@ -37,8 +44,6 @@ Left screen is the program, right screen is git bash which is used to open the p
 - numpy
 - pyautogui
 
-
-
-
-
-
+---
+### Reference
+<http://velog.io/@huttzza/실시간-얼굴-인식-프로그램-1차-구현>
