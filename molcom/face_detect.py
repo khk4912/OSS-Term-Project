@@ -1,5 +1,6 @@
 import pickle
 from dataclasses import dataclass
+from threading import Event
 
 import cv2
 
@@ -11,15 +12,9 @@ class Face:
     probability: float
 
 
-def detect_face() -> Face | None:
+def detect_face(evt: Event) -> None:
     """
-    카메라를 통해 얼굴을 인식해서 그 정보를 리턴합니다.
-    알 수 없는 얼굴일 경우, None을 리턴합니다.
-
-    Returns
-    -------
-    Face | None
-        인식된 얼굴의 정보. 인식된 얼굴이 없을 경우 None을 리턴합니다.
+    카메라를 통해 얼굴을 인식해 관련 정보를 event-set합니다.
     """
 
     face_cascade = cv2.CascadeClassifier(
@@ -39,6 +34,8 @@ def detect_face() -> Face | None:
     while True:
         ret, frame = cam.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        is_there_unkown = False
 
         if not ret:
             raise RuntimeError("카메라를 찾을 수 없습니다.")
@@ -61,6 +58,7 @@ def detect_face() -> Face | None:
             else:
                 name = "Unknown"
                 confidence_str = f"{round(100 - confidence)}%"
+                is_there_unkown = True
 
             cv2.putText(
                 frame,
@@ -81,10 +79,13 @@ def detect_face() -> Face | None:
                 1,
             )
 
-        cv2.imshow("Face", frame)
+        if is_there_unkown:
+            evt.set()
 
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-            break
+        # cv2.imshow("Face", frame)
+
+        # if cv2.waitKey(1) & 0xFF == ord("q"):
+        #     break
 
     cam.release()
     cv2.destroyAllWindows()

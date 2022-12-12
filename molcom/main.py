@@ -1,6 +1,7 @@
 import re
+import pickle
 import threading
-from tkinter import Button, Tk, messagebox, simpledialog
+from tkinter import Button, Tk, messagebox, simpledialog, Label
 
 
 from face_detect import detect_face
@@ -15,7 +16,21 @@ class MolcomMainWindow(Tk):
         self.geometry("300x300")
         self.resizable(width=False, height=False)
 
+        self.protocol("WM_DELETE_WINDOW", self.__on_closing)
+
+        self.faces = self.__load_pickle()
+
+        self.__threads: list[threading.Thread] = []
         self.__init_ui()
+
+    def __on_closing(self):
+        self.destroy()
+
+    def __load_pickle(self) -> dict[int, str]:
+        with open("face_ids.pickle", "rb") as f:
+            faces = pickle.load(f)
+
+        return faces
 
     def __init_ui(self):
         face_reg_button = Button(
@@ -30,8 +45,19 @@ class MolcomMainWindow(Tk):
             command=self.__start_button_clicked,
         )
 
-        face_reg_button.grid(row=1, column=0)
-        start_button.grid(row=1, column=1)
+        now_face_label = Label(
+            self,
+            text="현재 등록된 얼굴이 없어요."
+            if len(self.faces) == 0
+            else f"현재 얼굴은 {self.faces[len(self.faces)]}을 인식해요.",
+        )
+
+        face_reg_button.grid(row=0, column=0)
+        start_button.grid(row=0, column=1)
+        now_face_label.grid(row=1, column=0, columnspan=2)
+
+        if len(self.faces) == 0:
+            start_button.config(state="disabled")
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -56,12 +82,21 @@ class MolcomMainWindow(Tk):
         else:
             messagebox.showinfo("성공!", "얼굴 등록에 성공했어요.")
 
-    def __start_button_clicked(self):
-        switcher = WindowSwitcher()
-        evt = threading.Event()
+            self.faces = self.__load_pickle()
+            self.__init_ui()
 
-        det_face_thread = threading.Thread(target=detect_face, args=(evt,))
+    def __start_button_clicked(self):
+        evt = threading.Event()
+        switcher = WindowSwitcher(evt)
+
+        det_face_thread = threading.Thread(target=detect_face, args=(evt,), daemon=True)
+        switcher_thread = threading.Thread(target=switcher.run, daemon=True)
+
+        self.__threads.append(det_face_thread)
+        self.__threads.append(switcher_thread)
+
         det_face_thread.start()
+        switcher_thread.start()
 
 
 if __name__ == "__main__":
