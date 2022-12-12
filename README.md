@@ -1,10 +1,12 @@
 # OSS-Term-Project
 ---
+
 ## Project Summary
 This project implements changing page if a face different from the registered face is recongnized.
 
 ---
-## A method of execution
+## A method of execution 
+
 #### If first time
  1. Turn Git Bash
  2. Write code like this
@@ -14,6 +16,7 @@ This project implements changing page if a face different from the registered fa
 - $ pip install -r requirments.txt
 - $ cd molcom
 - $ python main.py
+
 #### If not first time
  1. Turn Git Bash
  2. Write code like this
