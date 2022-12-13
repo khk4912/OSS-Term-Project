@@ -1,9 +1,11 @@
-# OSS-Term-Project
+# OSS-Term-Project - Molcom Project
 
 ---
+## Project motivation
+To prevent others from getting caught doing other things on their computers at home or at work
 
+---
 ## Project Summary
-
 This project implements changing page if a face different from the registered face is recongnized.
 
 ---
@@ -36,7 +38,8 @@ python main.py
 
 ![image](https://user-images.githubusercontent.com/106923158/207044619-1ce8a668-6619-48a1-b876-82c113398caf.png)
 
-Left screen is the program, right screen is git bash which is used to open the program.
+- Left screen is the program. if you click 얼굴인식 box, Write the name of the person you want to register in English, and when your face approach to the camera, take 100 pictures of the person's face and save them in the program. If you click 시작 box, an object that is not registered on the camera is recognized, the computer's screen is switched
+- right screen is git bash which is used to open the program.
 
 ---
 
