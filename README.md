@@ -1,7 +1,7 @@
 # OSS-Term-Project - Molcom Project
 
 ---
-##Project motivation
+## Project motivation
 To prevent others from getting caught doing other things on their computers at home or at work
 
 ---
