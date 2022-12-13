@@ -1,9 +1,11 @@
 # OSS-Term-Project - Molcom Project
 
 ---
+##Project motivation
+To prevent others from getting caught doing other things on their computers at home or at work
 
+---
 ## Project Summary
-
 This project implements changing page if a face different from the registered face is recongnized.
 
 ---
